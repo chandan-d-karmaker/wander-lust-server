@@ -28,47 +28,60 @@ async function run() {
     const destinationCollection = db.collection("destination");
     const bookingCollection = db.collection("bookings");
 
-    app.post("/destination", async(req, res)=>{
+    app.post("/destination", async (req, res) => {
       const destinationData = req.body;
       console.log(destinationData);
       const result = await destinationCollection.insertOne(destinationData);
       res.json(result);
     })
 
-    app.get('/destination', async(req, res)=>{
+    app.get('/destination', async (req, res) => {
       const result = await destinationCollection.find().toArray();
       res.send(result);
     })
 
-    app.get('/destination/:id', async(req, res)=>{
+    app.get('/destination/:id', async (req, res) => {
       const id = req.params.id;
 
-      const result = await destinationCollection.findOne({_id: new ObjectId(id)});
+      const result = await destinationCollection.findOne({ _id: new ObjectId(id) });
       res.send(result);
     })
 
-    app.patch('/destination/:id', async(req, res)=>{
+    app.patch('/destination/:id', async (req, res) => {
       const id = req.params.id;
       const updatedData = req.body;
 
       const result = await destinationCollection.updateOne(
-        {_id: new ObjectId(id)},
-        {$set: updatedData}
+        { _id: new ObjectId(id) },
+        { $set: updatedData }
       )
 
       res.json(result);
 
     })
 
-    app.delete('/destination/:id', async(req, res)=>{
+    app.delete('/destination/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await destinationCollection.deleteOne({_id: new ObjectId(id)});
+      const result = await destinationCollection.deleteOne({ _id: new ObjectId(id) });
       res.json(result);
     })
 
-    app.post('/bookings', async(req, res)=>{
+    app.post('/bookings', async (req, res) => {
       const bookingData = req.body;
       const result = await bookingCollection.insertOne(bookingData);
+      res.json(result);
+    })
+
+    app.get('/booking/:userId', async (req, res) => {
+      const userId = req.params.userId;
+      const result = await bookingCollection.find({ userId: userId }).toArray();
+      res.json(result);
+
+    })
+
+    app.delete('/booking/:bookingId', async(req, res)=>{
+      const {bookingId} = req.params;
+      const result = await bookingCollection.deleteOne({_id: new ObjectId(bookingId)});
       res.json(result);
     })
 
@@ -84,10 +97,10 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.get('/', (req, res)=>{
-    res.send("server is working.........")
+app.get('/', (req, res) => {
+  res.send("server is working.........")
 })
 
-app.listen(PORT, ()=>{
-    console.log(`server is running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`);
 })
