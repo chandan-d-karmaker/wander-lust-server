@@ -26,6 +26,7 @@ async function run() {
 
     const db = client.db("wanderlust");
     const destinationCollection = db.collection("destination");
+    const bookingCollection = db.collection("bookings");
 
     app.post("/destination", async(req, res)=>{
       const destinationData = req.body;
@@ -64,6 +65,14 @@ async function run() {
       const result = await destinationCollection.deleteOne({_id: new ObjectId(id)});
       res.json(result);
     })
+
+    app.post('/bookings', async(req, res)=>{
+      const bookingData = req.body;
+      const result = await bookingCollection.insertOne(bookingData);
+      res.json(result);
+    })
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
