@@ -93,7 +93,7 @@ async function run() {
       res.json(result);
     })
 
-    app.post('/bookings', async (req, res) => {
+    app.post('/bookings', verifyToken, async (req, res) => {
       const bookingData = req.body;
       const result = await bookingCollection.insertOne(bookingData);
       res.json(result);
@@ -106,7 +106,7 @@ async function run() {
 
     })
 
-    app.delete('/booking/:bookingId', async (req, res) => {
+    app.delete('/booking/:bookingId', verifyToken, async (req, res) => {
       const { bookingId } = req.params;
       const result = await bookingCollection.deleteOne({ _id: new ObjectId(bookingId) });
       res.json(result);
